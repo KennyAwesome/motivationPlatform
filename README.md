@@ -6,14 +6,24 @@ Status (by Kenny) at 7:14 Nov 12:
 - login has form error, dunno how to fix
 - to run:
 
-# git clone https://github.com/KennyAwesome/motivationPlatform.git
-# cd motivationPlatform/backend
+1) git clone https://github.com/KennyAwesome/motivationPlatform.git
+
+2) cd motivationPlatform/backend
+
 3) python manage.py makemigration
+
 4) python manage.py migrate
+
 5) python manage.py createsuperuser
+
     -> to create database admin (email does not that matter)
+
     please keep it coherent:
+
         username: motivator
+
         password: awesomemotivationapp
+
 6) python manage.py runserver
+
     -> python manage.py runserver PORT (is optional)
