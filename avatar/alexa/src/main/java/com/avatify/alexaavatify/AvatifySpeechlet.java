@@ -6,6 +6,17 @@ import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SsmlOutputSpeech;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+import org.json.*;
+
 public class AvatifySpeechlet implements Speechlet {
 
     @Override
@@ -18,7 +29,11 @@ public class AvatifySpeechlet implements Speechlet {
 
     @Override
     public SpeechletResponse onLaunch(LaunchRequest launchRequest, Session session) throws SpeechletException {
-        return getCurrentMoodResponse();
+        try {
+            return getCurrentMoodResponse();
+        } catch (Exception e) {
+            return getErrorResponse();
+        }
     }
 
     @Override
@@ -27,7 +42,11 @@ public class AvatifySpeechlet implements Speechlet {
         String intentName = (intent != null) ? intent.getName() : null;
 
         if ("GetMoodIntent".equals(intentName)) {
-            return getCurrentMoodResponse();
+            try {
+                return getCurrentMoodResponse();
+            } catch (Exception e) {
+                return getErrorResponse();
+            }
         } else if ("AMAZON.StopIntent".equals(intentName)) {
             return getStopResponse();
         } else if ("AMAZON.CancelIntent".equals(intentName)) {
@@ -39,8 +58,43 @@ public class AvatifySpeechlet implements Speechlet {
         }
     }
 
-    private SpeechletResponse getCurrentMoodResponse() {
-        String text = "You're doing great. Keep it up.";
+    private SpeechletResponse getCurrentMoodResponse() throws IOException, JSONException {
+        // Request
+        String reqUrl = "http://avatify.westeurope.cloudapp.azure.com:8000/api/v1/update/alexa";
+        URL url = new URL(reqUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        // Response
+        InputStream is = connection.getInputStream();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+
+        // Parse JSON
+        String jsonStr = sb.toString();
+        JSONObject json = new JSONObject(jsonStr);
+        /*
+        JSONArray tasks = json.getJSONArray("tasks");
+        JSONObject currentTask = (JSONObject) tasks.get(0);
+        JSONObject mood = (JSONObject) json.getJSONObject("mood");
+        String moodStr = mood.getString("feeling");
+        Float moodVal = BigDecimal.valueOf(mood.getDouble("value")).floatValue();
+        */
+        JSONArray dialogs = json.getJSONArray("dialogs");
+        String dialog = dialogs.getString(0);
+
+        PlainTextOutputSpeech response = new PlainTextOutputSpeech();
+        response.setText(dialog);
+        return SpeechletResponse.newTellResponse(response);
+    }
+
+    private SpeechletResponse getErrorResponse() {
+        String text = "Oops. Something went wrong.";
 
         PlainTextOutputSpeech response = new PlainTextOutputSpeech();
         response.setText(text);
