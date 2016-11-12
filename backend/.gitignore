@@ -20,7 +20,7 @@ tests/report/
 /lib
 
 # ignore db, because it's personal and everybody does at least have an initial one
-/backend/db.sqlite3
+db.sqlite3
 
 #ignore for kenny
 /kennylocal
