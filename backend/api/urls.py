@@ -16,6 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from . import views
+
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^ping/', views.ping),
+    url(r'^update/nao/', views.update_nao),
+    url(r'^update/todo/', views.update_todo),
+    url(r'^token/wunderlist/', views.receive_access_token)
 ]
