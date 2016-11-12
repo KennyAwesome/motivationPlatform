@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="panel panel-default">
+                <h3>Create New Account</h3>
+                    <form action="{% url 'userManager:register' %}" method="post">
+                        {% csrf_token %}
+                        {% include 'form_template.html' %}
+                        <!-- url 'music:favourite' album.id; crosssite request forgery -->
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

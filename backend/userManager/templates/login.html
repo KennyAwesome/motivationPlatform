@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block navItems %}
+<ul class="nav navbar-nav navbar-right"> 
+    <li> 
+        <a href="#"> 
+            <span class="glyphicon glyphicon-off"></span>
+            &nbsp; Login
+        </a> 
+    </li> 
+</ul>
+{% endblock %}
+
+{% block body %}
+    <form action="{% url 'userManager:login' %}" method="post">
+        {% csrf_token %}
+        {% include 'form_template.html' %}
+        <!-- url 'music:favourite' album.id; crosssite request forgery -->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
