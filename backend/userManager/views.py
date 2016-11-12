@@ -1,14 +1,10 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import  reverse_lazy
 from django.contrib.auth import  authenticate, login
-# authenticate -> checks in db if exists, create regular session ID
-#from django.views import generic
+from django.shortcuts import render
 from django.views.generic import View
-from django.views.generic.edit import CreateView
-from .forms import RegisterForm
+
 from .forms import LoginForm
+from .forms import RegisterForm
+
 
 #from django.context_processor import csrf
 #from .models import # will be tokens

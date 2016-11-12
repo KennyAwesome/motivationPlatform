@@ -25,7 +25,10 @@ SECRET_KEY = 'n8=r^pbhmd=_-a4ghi9ad0fuw#-#1d_hok6n!c1y5h5%j5-o#h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'avatify.westeurope.cloudapp.azure.com'
+]
 
 
 # Application definition
@@ -39,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
