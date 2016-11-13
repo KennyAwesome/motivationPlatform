@@ -5,6 +5,7 @@ import logging
 
 from config import config
 from connectors.wunderlist import WunderlistConnector
+from azure.messageservice import AzureMessageService
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,24 @@ class WebhookView(View):
 
     def post(self, request, application):
         if application == 'wunderlist':
-            logger.info("WEBHOOK!!")
+            ws_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+            ams = AzureMessageService()
+
+            tasks = ws_conn.get_tasks(LIST_INBOX_ID)
+
+            ams.write({
+                'tasks': tasks,
+                'dialogs': [
+                    'You are doing great today!',
+                    'Keep it up!'
+                ],
+                'mood': {
+                    'feeling': 'excited',
+                    'value': 0.85
+                }
+            })
+
+            ams.exit()
 
             return HttpResponse()
 
@@ -62,7 +80,7 @@ class WebhookView(View):
 
 class UpdateView(View):
     def get(self, request, device_id):
-        if device_id == 'test':
+        if device_id == 'test' :
             ws_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
 
             tasks = ws_conn.get_tasks(LIST_INBOX_ID)
