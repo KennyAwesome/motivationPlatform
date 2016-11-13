@@ -1,4 +1,7 @@
+
 # values for the moodscore
+import json
+
 MOOD_ABSOLUTE_VALUE = 0.0
 
 MOOD_POINTS_MAX = 100
@@ -28,3 +31,8 @@ MOODS = [
         'upper_bound': 1.0
     }
 ]
+
+MOOD_SPEECHES = []
+
+with open('config/speech.json') as speech_json:
+    MOOD_SPEECHES = json.load(speech_json)

@@ -8,11 +8,13 @@ from azure.messageservice import AzureMessageService
 from config import api
 from connectors.apps.wunderlist import WunderlistConnector
 from connectors.storage.database import DatabaseConnector
+from logic import moodscore
 
 logger = logging.getLogger(__name__)
 db_conn = DatabaseConnector()
 
 LIST_INBOX_ID = 276664080
+
 
 class PingView(View):
     def get(self, request):
@@ -41,18 +43,18 @@ class WebhookView(View):
             tasks = ws_conn.get_tasks(LIST_INBOX_ID)
 
             # TODO calculate mood values here
+            mood = {'name': 'excited'}  # CALCULATE ACTUAL MOOD!!
+            speech = moodscore.get_speech(mood)
+            print speech
 
-            ams.write({
+            result = {
                 'tasks': tasks,
-                'dialogs': [
-                    'You are doing great today!',
-                    'Keep it up!'
-                ],
-                'mood': {
-                    'feeling': 'excited',
-                    'value': 0.85
-                }
-            })
+                'speech': speech,
+                'mood': mood
+            }
+
+            # TODO enable sending
+            #ams.write(result)
 
             ams.exit()
 
@@ -94,14 +96,14 @@ class UpdateView(View):
 
         tasks = ws_conn.get_tasks(LIST_INBOX_ID)
 
-        return JsonResponse({
+        # TODO calculate mood values here
+        mood = {'name': 'excited'}  # CALCULATE ACTUAL MOOD!!
+        speech = moodscore.get_speech(mood)
+
+        result = {
             'tasks': tasks,
-            'dialogs': [
-                'You are doing great today!',
-                'Keep it up!'
-            ],
-            'mood': {
-                'feeling': 'excited',
-                'value': 0.85
-            }
-        })
+            'speech': speech,
+            'mood': mood
+        }
+
+        return JsonResponse(result)

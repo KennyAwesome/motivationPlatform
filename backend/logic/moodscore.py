@@ -1,3 +1,5 @@
+import random
+
 from config import mood
 
 
@@ -36,3 +38,10 @@ def calculate_score(points):
             return m
 
     return mood.MOODS[0]
+
+
+def get_speech(m):
+    speeches = mood.MOOD_SPEECHES[m['name']]
+    i = random.randint(0, len(speeches) - 1)
+
+    return speeches[i]
