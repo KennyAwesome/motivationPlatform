@@ -37,6 +37,20 @@ class WunderlistConnector:
 
         return json.loads(response.text)
 
+    def get_reminders(self, list_id):
+        request_url = self.api_base_url + 'reminders'
+        params = {'list_id': list_id}
+
+        # X-Access-Token: OAUTH-TOKEN X-Client-ID: CLIENT-ID
+        headers = {
+            'X-Access-Token': self.access_token,
+            'X-Client-ID': self.client_id
+        }
+
+        response = requests.get(request_url, params=params, headers=headers)
+
+        return json.loads(response.text)
+
     def get_tasks(self, list_id):
         request_url = self.api_base_url + 'tasks'
         params = {
