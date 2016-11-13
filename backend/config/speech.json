@@ -1,8 +1,38 @@
 {
   "excited": [
-    "juhuu"
+    "Awesome, you just made my day!",
+    "Doesnt it feel great, kickstarting off?",
+    "Uuuh, I appreciate your work!",
+    "You are doing sooo great, right to the next task!",
+    "Splendid, you could survive a Zombie apocalypse."
   ],
-  "rest": [
-    
+  "encouraging": [
+    "Yeah, now we are talking!",
+    "Super, you have got all the right moves!",
+    "When you make a mistake, you fix it, marvellous",
+    "When you are not afraid to be yourself is when you are most incredible, fabulous!",
+    "Actions speak louder than words, and yours tell an incredible story.",
+    "You have a good head on your shoulders, so keep using it!"
+  ],
+  "happy": [
+    "Wow, how do you do that?",
+    "You are working smart, I like that!",
+    "You have got style doing that!",
+    "Your mind is bright like a lightbulb!",
+    "You should be proud of yourself.",
+    "If it were not early now, I’d open a Champagne!",
+    "You are inspiring, maybe you could help others too?",
+    "You are great at figuring stuff out."
+  ],
+  "boss": [
+    "You are rocking today!",
+    "You are handling things like a boss!",
+    "Respect, keep pushing!",
+    "I like people, who do their work aplombly.",
+    "With steady work, there comes steady success!",
+    "Sometimes, you need to say that it is enough for today, so treat yourself with some relaxing time.",
+    "On a scale from 1 to 10, you are an 11.",
+    "You are a great example to others.",
+    "Your creative potential seems limitless."
   ]
 }
