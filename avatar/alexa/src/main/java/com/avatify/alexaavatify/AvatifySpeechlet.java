@@ -60,7 +60,7 @@ public class AvatifySpeechlet implements Speechlet {
 
     private SpeechletResponse getCurrentMoodResponse() throws IOException, JSONException {
         // Request
-        String reqUrl = "http://avatify.westeurope.cloudapp.azure.com:8000/api/v1/update/alexa";
+        String reqUrl = "http://avatify.westeurope.cloudapp.azure.com:8000/api/v1/update";
         URL url = new URL(reqUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -85,8 +85,7 @@ public class AvatifySpeechlet implements Speechlet {
         String moodStr = mood.getString("feeling");
         Float moodVal = BigDecimal.valueOf(mood.getDouble("value")).floatValue();
         */
-        JSONArray dialogs = json.getJSONArray("dialogs");
-        String dialog = dialogs.getString(0);
+        String dialog = json.getString("speech");
 
         PlainTextOutputSpeech response = new PlainTextOutputSpeech();
         response.setText(dialog);
