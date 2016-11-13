@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from config import database
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Logging settings
@@ -31,6 +33,15 @@ LOGGING = {
         },
     },
 }
+
+# Data persistence
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'avatify-backend',
+    }
+}
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'n8=r^pbhmd=_-a4ghi9ad0fuw#-#1d_hok6n!c1y5h5%j5-o#h'
@@ -71,7 +82,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'userManager/templates'),
+            os.path.join(BASE_DIR, 'usermanager/templates'),
         ]
         ,
         'APP_DIRS': True,
@@ -87,18 +98,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

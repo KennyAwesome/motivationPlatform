@@ -1,16 +1,18 @@
+import logging
+
 from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseNotFound
 from django.views.generic import View
-import logging
 
-from config import config
-from connectors.wunderlist import WunderlistConnector
 from azure.messageservice import AzureMessageService
+from config import api
+from connectors.apps.wunderlist import WunderlistConnector
+from connectors.storage.database import DatabaseConnector
 
 logger = logging.getLogger(__name__)
+db_conn = DatabaseConnector()
 
 LIST_INBOX_ID = 276664080
-
 
 class PingView(View):
     def get(self, request):
@@ -19,18 +21,26 @@ class PingView(View):
 
 class WebhookView(View):
     def get(self, request, application):
+        # user mocking
+        user = db_conn.get_user(api.KENNY_USER_ID)
+
         if application == 'wunderlist':
-            wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+            wl_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
             return JsonResponse(wl_conn.get_webhooks(LIST_INBOX_ID), safe=False)
         else:
             return HttpResponseNotFound
 
     def post(self, request, application):
+        # user mocking
+        user = db_conn.get_user(api.KENNY_USER_ID)
+
         if application == 'wunderlist':
-            ws_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+            ws_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
             ams = AzureMessageService()
 
             tasks = ws_conn.get_tasks(LIST_INBOX_ID)
+
+            # TODO calculate mood values here
 
             ams.write({
                 'tasks': tasks,
@@ -49,12 +59,15 @@ class WebhookView(View):
             return HttpResponse()
 
         else:
-            wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+            wl_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
 
             return JsonResponse(wl_conn.add_webhook(LIST_INBOX_ID))
 
     def delete(self, request, application):
-        wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+        # user mocking
+        user = db_conn.get_user(api.KENNY_USER_ID)
+
+        wl_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
 
         lists = wl_conn.get_lists()
 
@@ -74,7 +87,10 @@ class WebhookView(View):
 
 class UpdateView(View):
     def get(self, request, device_id):
-        ws_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+        # user mocking
+        user = db_conn.get_user(api.KENNY_USER_ID)
+
+        ws_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
 
         tasks = ws_conn.get_tasks(LIST_INBOX_ID)
 
@@ -89,8 +105,3 @@ class UpdateView(View):
                 'value': 0.85
             }
         })
-
-
-class CallbackView(View):
-    def get(self, request, application):
-        return HttpResponse(request.body.decode('utf-8'))

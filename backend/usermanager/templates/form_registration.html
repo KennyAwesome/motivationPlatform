@@ -5,7 +5,7 @@
         <div class="row">
             <div class="panel panel-default">
                 <h3>Create New Account</h3>
-                    <form action="{% url 'userManager:register' %}" method="post">
+                    <form action="{% url 'usermanager:register' %}" method="post">
                         {% csrf_token %}
                         {% include 'form_template.html' %}
                         <!-- url 'music:favourite' album.id; crosssite request forgery -->

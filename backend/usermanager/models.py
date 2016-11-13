@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 #     user = models.User
 #
 #     def get_absolute_url(self):
-#         return(reverse('userManager:detail',kwargs={'pk':self.pk})) #keyword args
+#         return(reverse('usermanager:detail',kwargs={'pk':self.pk})) #keyword args
 #
 #     def __str__(self):
 #         return self.album_title + ' - ' + self.artist

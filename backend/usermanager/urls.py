@@ -2,7 +2,7 @@ from django.conf.urls import url
 #from django.contrib import admin
 from . import views # . -> current directory
 
-app_name = 'userManager' # if you get template problems, you have probably forgotten to set namespace
+app_name = 'usermanager' # if you get template problems, you have probably forgotten to set namespace
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view() , name='index'), # default: ^$ -> index

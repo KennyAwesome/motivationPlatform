@@ -12,7 +12,7 @@ from .forms import RegisterForm
 #album = get_object_or_404(Album, pk=album_id)
 
 #class IndexView(generic.ListView):
-#    template_name = 'userManager/templates/index.html'
+#    template_name = 'usermanager/templates/index.html'
 #    def get_queryset(self):
 #        return HttpResponse("<h1>Basic User thingy works</h1>")
 class IndexView(View):

@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 
 class UsermanagerConfig(AppConfig):
-    name = 'userManager'
+    name = 'usermanager'

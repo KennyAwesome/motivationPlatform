@@ -5,7 +5,7 @@ import requests
 #
 # Wunderlist token generation: see README.md
 #
-from config import config
+from config import api
 
 
 class WunderlistConnector:
@@ -73,7 +73,7 @@ class WunderlistConnector:
         request_url = self.api_base_url + 'webhooks'
         data = {
             'list_id': list_id,
-            'url': config.API_BASE_URL + config.ENDPOINT_WEBHOOK + self.app_name,
+            'url': api.API_BASE_URL + api.ENDPOINT_WEBHOOK + self.app_name,
             'processor_type': 'generic',
             'configuration': ''
         }

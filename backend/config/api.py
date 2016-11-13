@@ -10,4 +10,8 @@ AZURE_MSG_SERVICE_NS = 'com.avatify.azuremsgsvc.App'
 
 # place client id and test access token here
 CLIENT_ID = '8a000cc2490c570fa528'
-ACCESS_TOKEN = 'd88cdd6ad528e5a86e0f80702ef7c3f9f876add3a6667e3bccf01101b8c1'
+
+# kenny user details
+KENNY_USER_ID = 1
+KENNY_USER_NAME = 'kennyawesome'
+KENNY_ACCESS_TOKEN = 'd88cdd6ad528e5a86e0f80702ef7c3f9f876add3a6667e3bccf01101b8c1'

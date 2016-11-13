@@ -1,13 +1,13 @@
 import subprocess
 
-from config import config
+from config import api
 
 
 class AzureMessageService:
     subproc = []
 
     def __init__(self):
-        self.p = subprocess.Popen(['java', '-cp', config.AZURE_MSG_SERVICE_JAR, config.AZURE_MSG_SERVICE_NS], stdin=subprocess.PIPE)
+        self.p = subprocess.Popen(['java', '-cp', api.AZURE_MSG_SERVICE_JAR, api.AZURE_MSG_SERVICE_NS], stdin=subprocess.PIPE)
 
     def write(self, dict):
         self.p.stdin.write(str(dict) + '\n')
