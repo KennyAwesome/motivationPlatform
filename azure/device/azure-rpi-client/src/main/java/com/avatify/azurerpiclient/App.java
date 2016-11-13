@@ -42,13 +42,14 @@ public class App
 
             try {
                 JSONObject json = new JSONObject(message);
-                JSONArray tasks = json.getJSONArray("tasks");
+                JSONObject mood = json.getJSONObject("mood");
 
-                if (tasks.length() == 0) {
+                if (mood.getInt("points") > 30) {
                     Runtime rt = Runtime.getRuntime();
                     Process pr = rt.exec(new String[]{"bash","-c","omxplayer ~/rocky.mp3"});
                 }
             } catch (Exception e) {
+                // System.out.println(e.getMessage());
                 // Error? Do nothing
             }
 
