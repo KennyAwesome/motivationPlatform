@@ -19,17 +19,11 @@ class PingView(View):
 
 class WebhookView(View):
     def get(self, request, application):
-        logger.info("WEBHOOK!!")
-
         if application == 'wunderlist':
-            logger.info(' --- WEBHOOK TRIGGERED ---')
-            logger.info(request.body)
-
-            return HttpResponse('works')
-
-        wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
-
-        return JsonResponse(wl_conn.get_webhooks(LIST_INBOX_ID), safe=False)
+            wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+            return JsonResponse(wl_conn.get_webhooks(LIST_INBOX_ID), safe=False)
+        else:
+            return HttpResponseNotFound
 
     def post(self, request, application):
         if application == 'wunderlist':
@@ -80,44 +74,21 @@ class WebhookView(View):
 
 class UpdateView(View):
     def get(self, request, device_id):
-        if device_id == 'test' :
-            ws_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+        ws_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
 
-            tasks = ws_conn.get_tasks(LIST_INBOX_ID)
+        tasks = ws_conn.get_tasks(LIST_INBOX_ID)
 
-            return JsonResponse({
-                'tasks': tasks,
-                'dialogs': [
-                    'You are doing great today!',
-                    'Keep it up!'
-                ],
-                'mood': {
-                    'feeling': 'excited',
-                    'value': 0.85
-                }
-            })
-
-        else:
-            response = JsonResponse({
-                'tasks': [
-                    {
-                        'id': 12345,
-                        'due_date': '2013-08-30T08:36:13.273Z',
-                        'starred': True,
-                        'title': 'Clean the dishes'
-                    }
-                ],
-                'dialogs': [
-                    'You are doing great today!',
-                    'Keep it up!'
-                ],
-                'mood': {
-                    'feeling': 'excited',
-                    'value': 0.85
-                }
-            })
-
-        return response
+        return JsonResponse({
+            'tasks': tasks,
+            'dialogs': [
+                'You are doing great today!',
+                'Keep it up!'
+            ],
+            'mood': {
+                'feeling': 'excited',
+                'value': 0.85
+            }
+        })
 
 
 class CallbackView(View):
