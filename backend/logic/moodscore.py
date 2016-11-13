@@ -19,11 +19,15 @@ def calculate_points(n_done_reg, n_done_star, n_overd_reg, n_overd_star):
 def calculate_score(points):
     pleasure = mood.MOOD_PLEASURE_BASE ** (mood.MOOD_PLEASURE_FACTOR * float(points)) + 1
 
+    mood_ctr = None
+
     for m in mood.MOODS:
+        mood_ctr = m
+
         if pleasure <= m['upper_bound']:
             return m, pleasure
 
-    return mood.MOODS[0], pleasure
+    return mood_ctr, pleasure
 
 
 def get_speech(m):

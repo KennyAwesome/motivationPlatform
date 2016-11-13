@@ -38,6 +38,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'avatify-backend',
+        'TIMEOUT': None
     }
 }
 
