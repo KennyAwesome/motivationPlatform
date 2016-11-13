@@ -9,6 +9,8 @@ from connectors.apps.wunderlist import WunderlistConnector
 from connectors.devices.messageservice import AzureConnector
 from connectors.storage.database import DatabaseConnector
 from logic import moodscore
+from logic.moodscore import calculate_points, calculate_score
+from models.tasks import get_today_tasks, get_n_open, get_n_overdue, enrich_tasks_dates
 
 logger = logging.getLogger(__name__)
 db_conn = DatabaseConnector()
@@ -38,32 +40,53 @@ class WebhookView(View):
 
         if application == 'wunderlist':
             ws_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
-            ams = AzureConnector()
+            az_conn = AzureConnector()
 
-            tasks = ws_conn.get_tasks(LIST_INBOX_ID)
+            tasks_open = ws_conn.get_tasks(LIST_INBOX_ID)
+            tasks_completed = ws_conn.get_completed_tasks(LIST_INBOX_ID)
 
-            # TODO calculate mood values here
-            mood = {'name': 'excited'}  # CALCULATE ACTUAL MOOD!!
+            reminders = ws_conn.get_reminders(LIST_INBOX_ID)
+
+            # print 'open: ' + str(tasks_open)
+            # print 'completed: ' + str(tasks_completed)
+            # print 'reminders: ' + str(reminders)
+
+            enrich_tasks_dates(tasks_open, reminders)
+            enrich_tasks_dates(tasks_completed, reminders)
+
+            tasks_open_today = get_today_tasks(tasks_open)
+            tasks_completed_today = get_today_tasks(tasks_completed)
+
+            n_overd_reg, n_overd_star = get_n_overdue(tasks_open_today)
+            n_done_reg, n_done_star = get_n_open(tasks_completed_today)
+
+            # print 'n overd reg: ' + str(n_overd_reg) + ' n overd star: ' + str(n_overd_star)
+            # print 'n done reg: ' + str(n_done_reg) + ' n done star: ' + str(n_done_star)
+
+            points = calculate_points(n_done_reg, n_done_star, n_overd_reg, n_overd_star)
+            mood, pleasure = calculate_score(points)
+
+            mood['points'] = points
+            mood['pleasure'] = pleasure
+
             speech = moodscore.get_speech(mood)
-            print speech
+
+            # print ' points: ' + str(points) + ' speech: ' + speech
 
             result = {
-                'tasks': tasks,
+                'tasks': tasks_open,
                 'speech': speech,
                 'mood': mood
             }
 
-            # TODO enable sending
-            #ams.write(result)
+            az_conn.write(result)
 
-            ams.exit()
+            az_conn.exit()
 
             return HttpResponse()
 
         else:
-            wl_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
-
-            return JsonResponse(wl_conn.add_webhook(LIST_INBOX_ID))
+            return HttpResponseNotFound('webhook endpoint not defined')
 
     def delete(self, request, application):
         # user mocking
@@ -94,14 +117,39 @@ class UpdateView(View):
 
         ws_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
 
-        tasks = ws_conn.get_tasks(LIST_INBOX_ID)
+        tasks_open = ws_conn.get_tasks(LIST_INBOX_ID)
+        tasks_completed = ws_conn.get_completed_tasks(LIST_INBOX_ID)
 
-        # TODO calculate mood values here
-        mood = {'name': 'excited'}  # CALCULATE ACTUAL MOOD!!
+        reminders = ws_conn.get_reminders(LIST_INBOX_ID)
+
+        # print 'open: ' + str(tasks_open)
+        # print 'completed: ' + str(tasks_completed)
+        # print 'reminders: ' + str(reminders)
+
+        enrich_tasks_dates(tasks_open, reminders)
+        enrich_tasks_dates(tasks_completed, reminders)
+
+        tasks_open_today = get_today_tasks(tasks_open)
+        tasks_completed_today = get_today_tasks(tasks_completed)
+
+        n_overd_reg, n_overd_star = get_n_overdue(tasks_open_today)
+        n_done_reg, n_done_star = get_n_open(tasks_completed_today)
+
+        # print 'n overd reg: ' + str(n_overd_reg) + ' n overd star: ' + str(n_overd_star)
+        # print 'n done reg: ' + str(n_done_reg) + ' n done star: ' + str(n_done_star)
+
+        points = calculate_points(n_done_reg, n_done_star, n_overd_reg, n_overd_star)
+        mood, pleasure = calculate_score(points)
+
+        mood['points'] = points
+        mood['pleasure'] = pleasure
+
         speech = moodscore.get_speech(mood)
 
+        # print ' points: ' + str(points) + ' speech: ' + speech
+
         result = {
-            'tasks': tasks,
+            'tasks': tasks_open,
             'speech': speech,
             'mood': mood
         }
