@@ -14,24 +14,24 @@ class PingView(View):
 class WebhookView(View):
     def get(self, request, application):
         if application == 'wunderlist':
+            print ' --- WEBHOOK TRIGGERED ---'
+            print request.body
+
             return HttpResponse('works')
-        else:
-            return HttpResponseNotFound('The webhook for \'' + application + '\' is not activated')
+
+        wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+
+        return HttpResponse(str(wl_conn.get_webhooks(276664080)))
 
     def post(self, request, application):
-        return
+        wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+
+        return HttpResponse(str(wl_conn.add_webhook(276664080)))
 
 
 class UpdateView(View):
     def get(self, request, device_id):
         if device_id == 'test':
-            wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
-
-            lists = wl_conn.get_lists()
-            tasks = wl_conn.get_tasks(276664080)
-
-            print lists
-            print tasks
 
             return HttpResponse('worked')
 
