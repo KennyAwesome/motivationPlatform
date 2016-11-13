@@ -4,9 +4,9 @@ from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseNotFound
 from django.views.generic import View
 
-from azure.messageservice import AzureMessageService
 from config import api
 from connectors.apps.wunderlist import WunderlistConnector
+from connectors.devices.messageservice import AzureConnector
 from connectors.storage.database import DatabaseConnector
 from logic import moodscore
 
@@ -38,7 +38,7 @@ class WebhookView(View):
 
         if application == 'wunderlist':
             ws_conn = WunderlistConnector(api.CLIENT_ID, user.access_token)
-            ams = AzureMessageService()
+            ams = AzureConnector()
 
             tasks = ws_conn.get_tasks(LIST_INBOX_ID)
 

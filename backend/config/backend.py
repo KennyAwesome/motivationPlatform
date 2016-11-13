@@ -41,7 +41,6 @@ CACHES = {
     }
 }
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'n8=r^pbhmd=_-a4ghi9ad0fuw#-#1d_hok6n!c1y5h5%j5-o#h'
 
@@ -74,14 +73,14 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'usermanager/templates'),
+            os.path.join(BASE_DIR, 'ui/usermanager/templates'),
         ]
         ,
         'APP_DIRS': True,
@@ -95,8 +94,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

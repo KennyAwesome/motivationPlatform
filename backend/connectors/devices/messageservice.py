@@ -3,7 +3,7 @@ import subprocess
 from config import api
 
 
-class AzureMessageService:
+class AzureConnector:
     subproc = []
 
     def __init__(self):
