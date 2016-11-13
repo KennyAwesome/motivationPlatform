@@ -1,9 +1,14 @@
 from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseNotFound
 from django.views.generic import View
+import logging
 
 from config import config
 from connectors.wunderlist import WunderlistConnector
+
+logger = logging.getLogger(__name__)
+
+LIST_INBOX_ID = 276664080
 
 
 class PingView(View):
@@ -13,27 +18,66 @@ class PingView(View):
 
 class WebhookView(View):
     def get(self, request, application):
+        logger.info("WEBHOOK!!")
+
         if application == 'wunderlist':
-            print ' --- WEBHOOK TRIGGERED ---'
-            print request.body
+            logger.info(' --- WEBHOOK TRIGGERED ---')
+            logger.info(request.body)
 
             return HttpResponse('works')
 
         wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
 
-        return HttpResponse(str(wl_conn.get_webhooks(276664080)))
+        return JsonResponse(wl_conn.get_webhooks(LIST_INBOX_ID), safe=False)
 
     def post(self, request, application):
+        if application == 'wunderlist':
+            logger.info("WEBHOOK!!")
+
+            return HttpResponse()
+
+        else:
+            wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
+
+            return JsonResponse(wl_conn.add_webhook(LIST_INBOX_ID))
+
+    def delete(self, request, application):
         wl_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
 
-        return HttpResponse(str(wl_conn.add_webhook(276664080)))
+        lists = wl_conn.get_lists()
+
+        for entry in lists:
+            list_id = entry['id']
+            list_rev = entry['revision']
+
+            webhooks = wl_conn.get_webhooks(list_id)
+
+            for webhook in webhooks:
+                wh_id = webhook['id']
+
+                wl_conn.remove_webhook(wh_id, list_rev)
+
+        return HttpResponse()
 
 
 class UpdateView(View):
     def get(self, request, device_id):
         if device_id == 'test':
+            ws_conn = WunderlistConnector(config.CLIENT_ID, config.ACCESS_TOKEN)
 
-            return HttpResponse('worked')
+            tasks = ws_conn.get_tasks(LIST_INBOX_ID)
+
+            return JsonResponse({
+                'tasks': tasks,
+                'dialogs': [
+                    'You are doing great today!',
+                    'Keep it up!'
+                ],
+                'mood': {
+                    'feeling': 'excited',
+                    'value': 0.85
+                }
+            })
 
         else:
             response = JsonResponse({
@@ -56,8 +100,6 @@ class UpdateView(View):
             })
 
         return response
-        # else:
-        #     return HttpResponseNotFound('The device \'' + device_id + '\' could not be found')
 
 
 class CallbackView(View):

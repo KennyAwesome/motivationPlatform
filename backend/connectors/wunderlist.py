@@ -73,7 +73,7 @@ class WunderlistConnector:
         request_url = self.api_base_url + 'webhooks'
         data = {
             'list_id': list_id,
-            'url': config.SERVER_BASE_URL + config.ENDPOINT_WEBHOOK + self.app_name,
+            'url': config.API_BASE_URL + config.ENDPOINT_WEBHOOK + self.app_name,
             'processor_type': 'generic',
             'configuration': ''
         }
